@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para ti</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#fbf5f1;--ink:#2e2226;--muted:#7a6a70;--accent:#b4546b;--card:#fffaf2;--line:#ecdcd8;
+  --desk1:#ead9c6;--desk2:#e0cab3;--paper:#fffaf2;--flap:#f1e2cf;--pline:#e0cfba;
+  --serif:"Cormorant Garamond",Georgia,serif;--sans:"Inter",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1418;--ink:#f3e8ea;--muted:#b3a0a6;--accent:#e58aa0;--card:#33272a;--line:#3a2b32;--desk1:#2b201d;--desk2:#221917;--paper:#3b2e2b;--flap:#4a3a36;--pline:#55433e}}
+:root[data-theme="dark"]{--bg:#1b1418;--ink:#f3e8ea;--muted:#b3a0a6;--accent:#e58aa0;--card:#33272a;--line:#3a2b32;--desk1:#2b201d;--desk2:#221917;--paper:#3b2e2b;--flap:#4a3a36;--pline:#55433e}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.15;margin:0}
+.screen{display:none;min-height:100svh;max-width:640px;margin:0 auto;padding:26px 22px;flex-direction:column;justify-content:center}
+.screen.active{display:flex;animation:fade .7s ease}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.center{text-align:center}
+.lead{color:var(--muted);margin:8px 0 22px}
+h1{font-size:clamp(2.4rem,9vw,3.6rem)}
+h1 em{color:var(--accent)}
+h2{font-size:clamp(2rem,7vw,2.6rem)}
+.btn{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:14px 30px;background:var(--accent);color:#fff;font-weight:500}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.35;cursor:default}
+.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.back{align-self:flex-start;background:none;border:0;font:inherit;color:var(--muted);cursor:pointer;padding:6px 0;margin-bottom:14px}
+
+
+.rise{opacity:0;animation:fade .9s ease forwards;animation-delay:var(--d,0s)}
+.instant .rise{animation:none;opacity:1}
+.intro{text-align:center;margin-bottom:20px}
+.intro p{margin:6px 0 0;color:var(--muted); size: 3px;}
+
+
+.desk{position:relative;height:min(56svh,440px);border-radius:22px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(135deg,var(--desk1),var(--desk2))}
+.env{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));width:116px;background:none;border:0;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px}
+.paper{position:relative;width:104px;height:72px;background:var(--paper);border:1px solid var(--pline);border-radius:6px;box-shadow:0 6px 14px rgba(60,35,25,.25);transition:transform .25s}
+.paper::before{content:"";position:absolute;inset:0;background:var(--flap);clip-path:polygon(0 0,100% 0,50% 60%);border-radius:6px 6px 0 0}
+.seal{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.9rem;box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.tag{background:var(--paper);border:1px solid var(--pline);border-radius:4px;padding:2px 8px;font-size:.78rem;line-height:1.35;box-shadow:0 2px 6px rgba(60,35,25,.18)}
+.env:hover:not(.locked) .paper{transform:translateY(-4px)}
+.env.done .paper{opacity:.7}
+.env.locked{cursor:default}
+.env.locked .paper{filter:grayscale(.85) brightness(.92)}
+.hint{text-align:center;color:var(--muted);font-size:.86rem;margin-top:14px}
+
+/* Cartitas  razones */
+#rdesk{height:min(62svh,480px)}
+.note{position:absolute;width:50px;height:40px;transform:translate(-50%,-50%) rotate(var(--r,0deg));background:var(--paper);border:1px solid var(--pline);border-radius:5px;box-shadow:0 4px 10px rgba(60,35,25,.25);cursor:pointer;color:var(--accent);font-size:1.05rem;display:grid;place-items:center;padding:0;transition:transform .2s}
+.note::before{content:"";position:absolute;inset:0;background:var(--flap);clip-path:polygon(0 0,100% 0,50% 62%);border-radius:5px 5px 0 0}
+.note span{position:relative;top:2px}
+.note:hover{transform:translate(-50%,-54%) rotate(var(--r,0deg))}
+.note.on{opacity:.6}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px 26px;min-height:200px;display:flex;flex-direction:column;justify-content:center}
+.stage.pop{animation:fade .5s ease}
+.stage small{color:var(--accent);letter-spacing:.14em;text-transform:uppercase;font-size:.74rem}
+.stage h3{font-size:1.8rem;margin:8px 0 10px}
+.stage p{margin:0;color:var(--muted)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px}
+.count{color:var(--muted);font-size:.9rem}
+.card2{margin-top:16px;min-height:130px;padding:22px 24px}
+.vales{display:grid;gap:16px;margin-top:6px}
+.vale{position:relative;display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--pline);border-radius:14px;padding:16px 16px 16px 18px;box-shadow:0 4px 12px rgba(60,35,25,.12)}
+.vale .ico{font-size:1.8rem;padding-right:14px;border-right:2px dashed var(--pline)}
+.vale .txt{flex:1;min-width:0}
+.vale b{font-family:var(--serif);font-size:1.3rem;font-weight:500;line-height:1.2;display:block}
+.vale .d{color:var(--muted);font-size:.86rem;line-height:1.4;display:block;margin-top:2px}
+.vale .btn{padding:9px 16px;font-size:.88rem;white-space:nowrap}
+.vale.used{opacity:.6}
+.vale.used .btn{background:transparent;color:var(--muted);border:1px solid var(--pline);opacity:1}
+.vale .nuevo{position:absolute;top:-9px;right:16px;background:var(--accent);color:#fff;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 10px;border-radius:999px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-size:.92rem}
+.final blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.4;margin:0 0 22px}
+.final p{color:var(--muted);margin:0}
+.sign{font-family:var(--serif);font-size:1.7rem;color:var(--accent);margin-top:20px}
+@media (prefers-reduced-motion:reduce){.screen.active,.stage.pop,.rise{animation:none}.rise{opacity:1}}
+</style>
+</head>
+<body>
+
+
+<section class="screen active" id="hub">
+  <div class="intro">
+    <h1 class="rise" style="--d:.5s">Hola calbita </h1>
+    <div id="h-lineas"></div>
+  </div>
+  <div class="desk rise" style="--d:3.6s"><div id="envs"></div></div>
+  <div class="hint rise" style="--d:4.4s" id="hint"></div>
+</section>
+
+<!-- CÓMO EMPEZÓ -->
+<section class="screen" id="v-cuando">
+  <button class="back" data-back>← Volver a la mesa</button>
+  <div class="eyebrow">El principio</div>
+  <h2 id="c-titulo"></h2>
+  <p class="lead" id="c-texto"></p>
+  <div class="stage" id="c-stage"></div>
+  <div class="nav"><button class="btn ghost" id="c-prev">Anterior</button><span class="count" id="c-count"></span><button class="btn" id="c-next">Siguiente</button></div>
+</section>
+
+<!-- RAZONES: mesa con cartitas -->
+<section class="screen" id="v-razones">
+  <button class="back" data-back>← Volver a la mesa</button>
+  <div class="eyebrow">Las razones</div>
+  <h2 id="r-titulo"></h2>
+  <p class="lead" id="r-texto"></p>
+  <div class="desk" id="rdesk"></div>
+  <div class="stage card2" id="r-card"><p>Toca una cartita ♥</p></div>
+  <div class="hint" id="r-count"></div>
+</section>
+
+<!-- VALES -->
+<section class="screen" id="v-vales">
+  <button class="back" data-back>← Volver a la mesa</button>
+  <div class="eyebrow">Para canjear</div>
+  <h2 id="p-titulo"></h2>
+  <p class="lead" id="p-texto"></p>
+  <div class="vales" id="p-vales"></div>
+  
+</section>
+
+<!-- FINAL -->
+<section class="screen center final" id="v-final">
+  <button class="back" data-back>← Volver a la mesa</button>
+  <blockquote id="f-frase"></blockquote>
+  <p id="f-msg"></p>
+  <div class="sign" id="f-firma"></div>
+</section>
+
+<script>
+/* ====== EDITA SOLO ESTA PARTE ====== */
+const DATA = {
+  nombre: "[Nombre]",
+  presentacion: [
+    "Esta pagina estara aca para cada vez que la necesites o quieras verla porque nunca cambiara nada",
+    "Y con forme pase el tiempo, estare actualizando las cartitas y algunas cositas jeje."
+  ],
+
+  menu: {
+    cuando: "Cómo empezó todo y cuando",
+    razones: "Razones por la cual me gustas",
+    vales: "Vales o cupones para ti",
+    final: "Lo que quería decirte",
+    pista: "Toca una carta. La última se abre cuando hayas leído las otras 😛.",
+    pistaListo: "Ahora si 💌"
+  },
+
+  cuando: {
+    titulo: "Cómo empezó todo",
+    texto: "Fue raro, si, pero a la vez se sintio como si quizas siempre lo hubiera sabido y se sintio tan natural para mi.",
+    momentos: [
+      { fecha: "[Par de años]", titulo: "El día que te conocí (no me acuerdo exactamente el dia jsjs)", texto: "[Cuando nos conocimos, cuando me hiciste correr casi toda la Arequipa porque la señorita tenia miedo de caminar, desde ahi me pareciste interesante, osea igual desde antes cuando hablabamos pero te vi y dije: wow, como puede haber alguien tan mensa jsjs, pero bueno, siempre me pareciste alguie interesante, de no habia duda y hasta te admiraba por todo lo que hacias y eras y simplemente sabia que eras alguien especial(mente mensa) ]" },
+      { fecha: "[Septiembre 2026]", titulo: "Cuando algo cambió", texto: "[Osea, masomenos ambos sabemos cuando todo cambio no? Ese dia en mi cumple, cuando paso lo que paso, yo me quede pensando y pensando, osea, hasta eso momento siempre te vi como mi amiga y obvio pasamos por mucho pero despues de eso, algo se encendio dentro mi, te empeze a ver con otros ojos y todos esos momentos anteriores y cosas que pasabamos y cosas que teniamos en comun y, lo mas importante, el como eras tu, todo eso que sencillamente era algo tan unico y especial de ti que no podia verlo de otra manera, al principio no sabia decirlo, me gustabas o era algo pasajero? pero seguimos hablando y, bueno, paso denuvo y me di cuenta, me gustabas, todo lo bueno que pensaba de ti se multiplico x10000 y me di cuenta que me gustabas y fue un sentimiento tan, noc, que ni yo puedo explicarlo con palabras pero sabia lo que sentia y te lo iba a demostrar pase lo que pase hasta que te aburras de mi o algo jsjs pero desde ese dia no he hecho mas que enamorarme mas y mas de ti.]" },
+    ]
+  },
+
+  razones: {
+    titulo: "Mis razones",
+    texto: "Cada cartita es una razón. Ábrelas todas jeje (y posiblemente falten muuchas mas).",
+    lista: [
+      { t: "Tu risa", d: "[Es tan literalmente tu y siempre que la escucho me da felicidad a la vez que mas risa jsjs]" },
+      { t: "Cómo me haces sentir", d: "[Esto es de las cosas mas lindas que siento contigo porque contigo no tengo que esforzarme, soy practicamente yo mismo y eso para mi es raro pero contigo todo se siente tan natural que me encanta]" },
+      { t: "Tu forma de ser", d: "[Tu forma de ser en todos los sentidos, con tus estudios, familia, personas cercanas, todo, pero mas aun me llamo la atencion lo oportunista que eres, lo valiente para afrontar esas cosas y querer hacerlo sola, tu impredicibilidad, tus ganas de ser mas y mas y ese corazon tan lindo que tienes]" },
+      { t: "Lo que dices sin darte cuenta", d: "[Incluso cuando te pones celosa y asi o hasta cuando no sabes que decir o reaccionar, todo eso es lindo de ti]" },
+      { t: "Tu mirada", d: "[Osea, hay algo mas que decir? Tus ojos son hermosos y podria verlos todo el dia]" },
+      { t: "Cómo tratas a los demás", d: "[Que a pesar que mayormente tienes la impresion de persona fria y asi, tienes un corazon de pollito y te importan los demas]" },
+      { t: "Tu forma de hablar", d: "[El como te expresas tan libremente (aveces un poquito de mas jsjs) y como casi no te guardas nada]" },
+      { t: "Tus locuras", d: "[Cuando estas en la calle y se te da por bailar o querer pelearte con una seño o cualquier cosa que dicesa aveces jsjs]" },
+      { t: "Contigo el tiempo vuela", d: "[Literalmente no me canso de estar contigo y siento que cada vez que salimos se queda muy corto para mi.]" },
+      { t: "Lo fácil que es hablar contigo", d: "[Que, aunque nos quedemos sin temas de conversacion o en silencio, siempre encontramos la forma de decir cualquier cosa para seguirla y terminar riendonos]" },
+      { t: "Cómo te ríes de tus propios chistes", d: "[Eso ya por lo loca y mensa que eres y que tanto adoro]" },
+      { t: "Lo terca que eres", d: "[En eso nos parecemos no? Cuando me ruegas que no gaste en taxi y que use bus o corredor y yo te insissssto que no pasa nada y asi peleamos para ver quien gana jsjs]" },
+      { t: "Tus callate o menso", d: "Osea, a este punto ya es tan tu que me da risa mas que todo cuando lo dices pero a la vez ternura" },
+      { t: "Lo que haces cuando te pones nerviosa o celosa", d: "[Osea, caudno finjes que algo no te importa o asi pero en el fondo se te nota que si es taaaaaaaaaaaaan lindo te lo juro jsjs y cuando tu JURAS que no eres celosa eh ]" },
+      { t: "El como sigues tus metas",d:"[El como te esfuerzas cada dia, cada cosa que haces, cada oportunidad que tomas me parece tan admirable enserio y mas orgulloso de ti no podria estar]"},
+      { t: "Tus tiempos", d: "Osea que, a pesar de tenes todos tus tiempos ocupados o estar en planes importantes o asi, te das un tiempo para responderme o hablar conmigo o tomarme importancia, no importa si es unos cuantos mensajes o un minuto de llamada o solo en la noche, cualquier momento contigo lo valoro muchisimo y estoy agradecido" },
+      { t: "Tu sencillez", d: "Me parece bastante lindo la verdad, que no te importe si algo viene marca o el precio o el tipo de plan, que hasta con ir a comprar salchipapa te guste, me encanta de ti (y que te enojes o me llames loco cuando quiero gastar en ti jsjs)" },
+      { t: "Tu forma de pensar", d: "Que te importa la politica, el futuro y la situacion actual del pais y temas relacionados, son cosas que es, almenos para mi, raro de ver en la gente y eso solamente me hacer verte mas y mas especial" },
+      { t: "Tu belleza", d: "Osea, falta decir algo aca? Eres simplemente tan hermosa y es que osea, contemple tanta belleza que mi viste te pertenece" },
+      { t: "Michi", d: "Es que, eres la dueña de Michi, como no me vas a gustar jsjs" },
+      { t: "Tus gustos", d: "Me encanta tus gustos de lo que sea y si es que no los comparto del todo, quiero aprender de ellos, ya sea tu gusto por el rock en español o BTS oooo...mmmm... de ahi creo que no gusta casi todo parecdo no?" }
+      /* { t: "...", d: "..." } */
+    ]
+  },
+
+  vales: {
+    whatsapp: "+51940863642",   
+    canje: "Hola, quiero canjear mi vale: ",
+    avisar: "Canjeado ✓ Avísame para cumplirlo 💌",
+    titulo: "Vales para ti",
+    texto: "Son tuyos. Canjéalos cuando quieras, no vencen. Y de vez en cuando aparecerán nuevos.(Osea igual iba a hacer todo eso pero por si quieres algo en un momento en especifico jeje)",
+  
+    lista: [
+      { icono: "☕", titulo: "Vale por un café o a un café", texto: "[Dónde y cuándo tú quieras.]" },
+      { icono: "🎬", titulo: "Vale por una película", texto: "[Tú eliges cuál.]" },
+      { icono: "🍷", titulo: "Vale por un vinito", texto: "[Válido en cualquier momento.]" },
+      { icono: "🍦", titulo: "Vale por un helado", texto: "[Del sabor que quieras y de donde quieras.]" },
+      { icono: "🎧", titulo: "Vale por una canción dedicada o playlist", texto: "[La eliges tú o la elijo yo.]"},
+      { icono: "🌃", titulo: "Vale por acompañarte a cualquier evento", texto: "[Tú eliges cuál y donde.]", nuevo: true},
+    ]
+  },
+
+  final: {
+    frase: "Si llegaste hasta aquí, es porque quería que supieras lo que siento y lo recordaras cada vez que quieras o necesites.",
+    mensaje: "Albita, se que llevamos bastante tiempo conociendonos y asi y estoy ansioso por los dias que faltan, me encanta como eres, como ya dije antes, eres tan pero tan pero taaaan especial e importante para mi que no me veo con otra persona que no seas tu, se que a ti te cuesta expresar lo que de verdad quizas quieras decir y esta bien, nunca me he quejado y asi mismo como eres me encantas y no importa el tiempo que lleve, nunca me rendire contigo, no importa si faltan dias, semanas, meses, años, todo el tiempo del mundo, con tal que seas tu no importa nada mas y te lo repetire todas la veces necesarias. Te quiero. Te quiero como no tienes idea y, sin importa que, estoy muy feliz de estar contigo, sea como sea y espero poder seguir apoyandote a futuro porque de verdad quiero estar ahi cuando logres todo lo que te propones, porque se que lo haras, es mas que obvio jsjs, pero quiero estar ahi en primera fila, estar orgulloso de lo que pudiste hacer y gritarle al mundo lo feliz que soy contigo pero igual, lo que ahora te puedo decir es simplemente gracias, gracias por ser como eres y por ser tu, no me arrepiendo de nada contigo. Te quiero.",
+
+  }
+};
+
+/*js*/
+
+const $ = id => document.getElementById(id), D = DATA, seen = new Set();
+let seed = 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+function go(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+  window.scrollTo(0, 0);
+  if (id === "hub") drawHub();
+}
+
+/* Mesa */
+const P = { cuando: [24, 70, -6], razones: [44, 27, 4], vales: [68, 68, 5], final: [78, 28, -4] };
+function drawHub() {
+  const ready = ["cuando", "razones", "vales"].every(k => seen.has(k));
+  const ks = ["cuando", "razones", "vales", "final"], em = { cuando: "🕰️", razones: "💗", vales: "🎟️", final: ready ? "💌" : "🔒" };
+  $("envs").innerHTML = ks.map(k =>
+    `<button class="env ${seen.has(k) ? "done" : ""} ${k === "final" && !ready ? "locked" : ""}" style="left:${P[k][0]}%;top:${P[k][1]}%;--r:${P[k][2]}deg" data-go="${k}">
+       <span class="paper"><span class="seal">${seen.has(k) ? "✓" : em[k]}</span></span><span class="tag">${D.menu[k]}</span></button>`).join("");
+  $("envs").querySelectorAll("[data-go]").forEach(b => b.onclick = () => {
+    const k = b.dataset.go;
+    if (k === "final" && !ready) return;
+    if (k === "vales") seen.add("vales");
+    
+    go("v-" + k);
+  });
+  $("hint").textContent = ready ? D.menu.pistaListo : D.menu.pista;
+}
+
+/* Cómo empezó */
+function stepper(key, p, items, html) {
+  let i = 0;
+  const stage = $(p + "-stage"), count = $(p + "-count"), prev = $(p + "-prev"), next = $(p + "-next");
+  function draw() {
+    stage.innerHTML = html(items[i]);
+    stage.classList.remove("pop"); void stage.offsetWidth; stage.classList.add("pop");
+    count.textContent = (i + 1) + " / " + items.length;
+    prev.disabled = i === 0;
+    next.textContent = i === items.length - 1 ? "Terminar ♥" : "Siguiente";
+    if (i === items.length - 1) seen.add(key);
+  }
+  prev.onclick = () => { if (i > 0) { i--; draw(); } };
+  next.onclick = () => { if (i < items.length - 1) { i++; draw(); } else go("hub"); };
+  draw();
+}
+
+/*cartitas*/
+function buildReasons() {
+  const L = D.razones.lista, n = L.length, cols = Math.ceil(Math.sqrt(n * 1.3)), rows = Math.ceil(n / cols);
+  const cells = [...Array(cols * rows).keys()].sort(() => rnd() - .5).slice(0, n);
+  const desk = $("rdesk"), lit = new Set();
+  let h = "";
+  L.forEach((r, i) => {
+    const c = cells[i] % cols, rw = Math.floor(cells[i] / cols);
+    const x = 11 + (c + .5 + (rnd() - .5) * .4) / cols * 78, y = 12 + (rw + .5 + (rnd() - .5) * .4) / rows * 76;
+    h += `<button class="note" style="left:${x}%;top:${y}%;--r:${Math.round((rnd() - .5) * 36)}deg" data-i="${i}" aria-label="Razón ${i + 1}"><span>♥</span></button>`;
+  });
+  desk.innerHTML = h;
+  const count = () => $("r-count").textContent = lit.size === n ? "Las leíste todas ♥" : lit.size + " / " + n + " leídas";
+  count();
+  desk.querySelectorAll(".note").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, r = L[i];
+    b.classList.add("on"); b.firstChild.textContent = "✓"; lit.add(i);
+    const card = $("r-card");
+    card.innerHTML = `<small>Razón ${i + 1}</small><h3>${r.t}</h3><p>${r.d}</p>`;
+    card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");
+    if (lit.size === n) seen.add("razones");
+    count();
+  });
+}
+
+/* Vales*/
+function buildVales() {
+  const V = D.vales, box = $("p-vales"), used = new Set();
+  try { (JSON.parse(localStorage.getItem("vales")) || []).forEach(t => used.add(t)); } catch (e) {}
+  const save = () => { try { localStorage.setItem("vales", JSON.stringify([...used])); } catch (e) {} };
+  function draw() {
+    box.innerHTML = V.lista.map((v, i) => {
+      const u = used.has(v.titulo);
+      return `<div class="vale ${u ? "used" : ""}">${v.nuevo && !u ? '<span class="nuevo">Nuevo</span>' : ""}<div class="ico">${v.icono}</div><div class="txt"><b>${v.titulo}</b><span class="d">${u ? V.avisar : v.texto}</span></div><button class="btn" data-i="${i}" ${u ? "disabled" : ""}>${u ? "Canjeado ✓" : "Canjear"}</button></div>`;
+    }).join("");
+    box.querySelectorAll("button:not([disabled])").forEach(b => b.onclick = () => {
+      if (!b.dataset.arm) {
+        b.dataset.arm = "1"; b.textContent = "¿Seguro?";
+        setTimeout(() => { delete b.dataset.arm; b.textContent = "Canjear"; }, 3000);
+        return;
+      }
+      const v = V.lista[+b.dataset.i];
+      used.add(v.titulo); save(); draw();
+      if (V.whatsapp) window.open("https://wa.me/" + V.whatsapp + "?text=" + encodeURIComponent(V.canje + v.titulo), "_blank");
+    });
+  }
+  draw();
+}
+
+/* Pintar contenido */
+
+$("h-lineas").innerHTML = D.presentacion.map((t, i) => `<p class="rise" style="--d:${1.4 + i * 1.1}s">${t}</p>`).join("");
+drawHub();
+setTimeout(() => $("hub").classList.add("instant"), 6000);
+
+$("c-titulo").textContent = D.cuando.titulo;
+$("c-texto").textContent = D.cuando.texto;
+stepper("cuando", "c", D.cuando.momentos, m => `<small>${m.fecha}</small><h3>${m.titulo}</h3><p>${m.texto}</p>`);
+
+$("r-titulo").textContent = D.razones.titulo;
+$("r-texto").textContent = D.razones.texto;
+buildReasons();
+
+$("p-titulo").textContent = D.vales.titulo;
+$("p-texto").textContent = D.vales.texto;
+buildVales();
+
+$("f-frase").textContent = D.final.frase;
+$("f-msg").textContent = D.final.mensaje;
+$("f-firma").textContent = D.final.firma;
+
+document.querySelectorAll("[data-back]").forEach(b => b.onclick = () => go("hub"));
+</script>
+</body>
+</html>
